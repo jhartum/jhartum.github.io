@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#050d08;}
+  *{box-sizing:border-box;}
+  ::selection{background:#0f5a2c;color:#d6ffe4;}
+  @keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes flick{0%{opacity:.94}7%{opacity:1}8%{opacity:.86}11%{opacity:1}70%{opacity:.97}100%{opacity:.95}}
+  @keyframes sweep{0%{transform:translateY(-140px)}100%{transform:translateY(100vh)}}
+  @keyframes pdot{0%{box-shadow:0 0 0 0 rgba(52,232,121,.5)}70%{box-shadow:0 0 0 7px rgba(52,232,121,0)}100%{box-shadow:0 0 0 0 rgba(52,232,121,0)}}
+  @media print{
+    @page{size:A4;margin:13mm;}
+    html,body{height:auto !important;overflow:visible !important;background:#fff !important;}
+    [data-chrome]{display:none !important;}
+    [data-screen-label="cv"]{position:static !important;inset:auto !important;height:auto !important;overflow:visible !important;background:#fff !important;color:#1a1a1a !important;text-shadow:none !important;}
+    [data-screen-label="cv"] *{text-shadow:none !important;color:#222 !important;}
+    [data-screen-label="cv"] a{color:#1a6b35 !important;}
+    [data-ink="title"]{color:#111 !important;}
+    [data-ink="accent"]{color:#1a6b35 !important;}
+    [data-ink="dim"]{color:#666 !important;}
+    [data-rail]{background:#c4c4c4 !important;}
+    [data-node]{color:#1a6b35 !important;}
+    [data-tag]{color:#1a6b35 !important;border-color:#1a6b35 !important;background:#fff !important;}
+  }
+</style>
+</helmet>
+
+<div data-screen-label="cv" style="position:fixed;inset:0;overflow-y:auto;overscroll-behavior:contain;background:radial-gradient(ellipse 120% 100% at 50% 32%, #0a1b10 0%, #06110a 56%, #040c07 100%);color:#34e879;font:14px/1.7 'IBM Plex Mono',ui-monospace,monospace;text-shadow:0 0 6px rgba(52,232,121,.30);">
+  <div style="max-width:760px;margin:0 auto;padding:44px 24px 130px;">
+
+    <div data-chrome style="display:flex;align-items:center;gap:14px;font-size:12.5px;margin-bottom:46px;flex-wrap:wrap;">
+      <span style="color:#1f9d52;">brezgunov</span><span style="color:#0f5a2c;">@</span><span style="color:#1f9d52;">cv</span><span style="color:#0f5a2c;">:</span><span style="color:#7dffae;">~</span><span style="color:#0f5a2c;">$</span>
+      <span style="flex:1;"></span>
+      <a href="Home.dc.html" style="color:#1f9d52;text-decoration:none;" style-hover="color:#7dffae;">home</a>
+      <span onClick="{{ goBlog }}" style="cursor:pointer;color:#1f9d52;" style-hover="color:#7dffae;">blog</span>
+      <span style="color:#d6ffe4;border-bottom:1px solid #2a7a45;">cv</span>
+      <span style="color:#0f3d22;">|</span>
+      <span onClick="{{ setRu }}" style="cursor:pointer;color:#1f9d52;" style-hover="color:#7dffae;"><sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span style="color:#7dffae;">●</span></sc-if>ru</span>
+      <span onClick="{{ setEn }}" style="cursor:pointer;color:#1f9d52;" style-hover="color:#7dffae;"><sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span style="color:#7dffae;">●</span></sc-if>en</span>
+      <span style="color:#0f3d22;">|</span>
+      <span onClick="{{ doPrint }}" title="hardcopy" style="cursor:pointer;color:#1f9d52;" style-hover="color:#7dffae;">:pdf</span>
+      <span onClick="{{ toggleCrt }}" title="CRT" style="cursor:pointer;color:#1f9d52;" style-hover="color:#7dffae;">[crt]</span>
+    </div>
+
+    <div data-ink="dim" style="font-size:12.5px;color:#1f9d52;margin-bottom:10px;">$ cat cv.txt</div>
+    <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}">
+      <div data-ink="title" style="font-size:28px;line-height:1.18;font-weight:700;color:#d6ffe4;text-shadow:0 0 14px rgba(52,232,121,.5);letter-spacing:-.01em;">Александр Брезгунов</div>
+      <div style="margin-top:7px;color:#34e879;font-size:13.5px;">Software Engineer · Fullstack · 5+ лет</div>
+    </sc-if>
+    <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
+      <div data-ink="title" style="font-size:28px;line-height:1.18;font-weight:700;color:#d6ffe4;text-shadow:0 0 14px rgba(52,232,121,.5);letter-spacing:-.01em;">Aleksandr Brezgunov</div>
+      <div style="margin-top:7px;color:#34e879;font-size:13.5px;">Software Engineer · Fullstack · 5+ yrs</div>
+    </sc-if>
+    <div style="margin-top:10px;font-size:12.5px;display:flex;align-items:center;gap:9px;color:#34e879;">
+      <span data-chrome style="width:7px;height:7px;border-radius:50%;background:#34e879;box-shadow:0 0 8px #34e879;animation:pdot 2.4s infinite;display:inline-block;flex:0 0 auto;"></span>
+      <span>{{ status }}</span>
+    </div>
+    <p data-ink="dim" style="margin:18px 0 0;color:#a9e6bf;max-width:70ch;font-size:13.5px;">{{ about }}</p>
+
+    <div data-ink="dim" style="font-size:12.5px;color:#1f9d52;margin:42px 0 6px;">$ git log --graph --all</div>
+    <div data-ink="dim" style="font-size:11.5px;color:#0f5a2c;margin-bottom:20px;">branch: career · 4 commits · 1 parallel branch</div>
+
+    <!-- ===== commit: neshkola (HEAD) ===== -->
+    <div style="display:flex;">
+      <div style="flex:0 0 26px;position:relative;">
+        <div data-rail style="position:absolute;left:11px;top:9px;bottom:0;width:2px;background:#1c5e35;"></div>
+        <div data-node style="position:absolute;left:4px;top:0;color:#9be8b4;font-size:15px;line-height:1;text-shadow:0 0 9px rgba(52,232,121,.65);">●</div>
+      </div>
+      <div style="flex:1;min-width:0;padding:0 0 14px 8px;">
+        <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;">commit 2f1a9c3</span>
+          <span data-ink="accent" style="color:#cdd66b;font-size:12.5px;">(HEAD → career, neshkola)</span>
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;white-space:nowrap;margin-left:auto;">{{ nesh.period }}</span>
+        </div>
+        <div data-ink="dim" style="color:#1f9d52;font-size:12px;margin-top:3px;">Author: Aleksandr Brezgunov &lt;<a href="mailto:sasha.brezgunov@gmail.com">sasha.brezgunov@gmail.com</a>&gt;</div>
+        <div data-ink="title" style="color:#d6ffe4;font-weight:700;font-size:16px;margin-top:13px;">{{ nesh.title }} — {{ nesh.role }}</div>
+        <div data-ink="dim" style="color:#7fb98f;font-style:italic;font-size:12.5px;margin-top:2px;">{{ nesh.ctx }}</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px;">
+          <sc-for list="{{ nesh.bullets }}" as="b" hint-placeholder-count="4">
+            <div style="display:flex;gap:9px;"><span style="color:#0f5a2c;flex:0 0 auto;">-</span><span style="color:#a9e6bf;font-size:13.5px;">{{ b }}</span></div>
+          </sc-for>
+        </div>
+        <div data-ink="dim" style="color:#1f9d52;font-size:12.5px;margin-top:12px;"><span style="color:#239f57;">stack:</span> {{ nesh.stack }}</div>
+      </div>
+    </div>
+
+    <!-- ===== branch: fintech (parallel) ===== -->
+    <div style="display:flex;">
+      <div style="flex:0 0 26px;position:relative;">
+        <div data-rail style="position:absolute;left:11px;top:0;bottom:0;width:2px;background:#1c5e35;"></div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div data-ink="dim" style="color:#0f5a2c;font-size:11.5px;margin:0 0 4px 8px;">↳ parallel contract</div>
+        <div style="display:flex;">
+          <div style="flex:0 0 26px;position:relative;">
+            <div data-rail style="position:absolute;left:11px;top:16px;bottom:16px;width:2px;background:#14532a;"></div>
+            <div data-rail style="position:absolute;left:-15px;top:16px;width:28px;height:2px;background:#14532a;"></div>
+            <div data-rail style="position:absolute;left:-15px;bottom:16px;width:28px;height:2px;background:#14532a;"></div>
+            <div data-node style="position:absolute;left:5px;top:9px;color:#7fb98f;font-size:13px;line-height:1;text-shadow:0 0 8px rgba(52,232,121,.5);">◆</div>
+          </div>
+          <div style="flex:1;min-width:0;padding:4px 0 16px 8px;">
+            <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
+              <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;">commit 7b1e0d2</span>
+              <span data-ink="accent" style="color:#cdd66b;font-size:12.5px;">(fintech)</span>
+              <span data-tag style="color:#9be8b4;font-size:10.5px;border:1px solid #2a7a45;border-radius:3px;padding:0 5px;background:#0d2a18;">NDA</span>
+                  <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;white-space:nowrap;margin-left:auto;">{{ fin.period }}</span>
+            </div>
+            <div data-ink="dim" style="color:#1f9d52;font-size:12px;margin-top:3px;">Author: Aleksandr Brezgunov &lt;<a href="mailto:sasha.brezgunov@gmail.com">sasha.brezgunov@gmail.com</a>&gt;</div>
+            <div data-ink="title" style="color:#d6ffe4;font-weight:700;font-size:15px;margin-top:13px;">{{ fin.title }} — {{ fin.role }}</div>
+            <div data-ink="dim" style="color:#7fb98f;font-style:italic;font-size:12.5px;margin-top:2px;">{{ fin.ctx }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px;">
+              <sc-for list="{{ fin.bullets }}" as="b" hint-placeholder-count="3">
+                <div style="display:flex;gap:9px;"><span style="color:#0f5a2c;flex:0 0 auto;">-</span><span style="color:#a9e6bf;font-size:13.5px;">{{ b }}</span></div>
+              </sc-for>
+            </div>
+            <div data-ink="dim" style="color:#1f9d52;font-size:12.5px;margin-top:12px;"><span style="color:#239f57;">stack:</span> {{ fin.stack }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== commit: tayga ===== -->
+    <div style="display:flex;">
+      <div style="flex:0 0 26px;position:relative;">
+        <div data-rail style="position:absolute;left:11px;top:0;bottom:0;width:2px;background:#1c5e35;"></div>
+        <div data-node style="position:absolute;left:4px;top:6px;color:#9be8b4;font-size:15px;line-height:1;text-shadow:0 0 9px rgba(52,232,121,.65);">●</div>
+      </div>
+      <div style="flex:1;min-width:0;padding:6px 0 14px 8px;">
+        <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;">commit a39c4f1</span>
+          <span data-ink="accent" style="color:#cdd66b;font-size:12.5px;">(tayga)</span>
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;white-space:nowrap;margin-left:auto;">{{ tayga.period }}</span>
+        </div>
+        <div data-ink="dim" style="color:#1f9d52;font-size:12px;margin-top:3px;">Author: Aleksandr Brezgunov &lt;<a href="mailto:sasha.brezgunov@gmail.com">sasha.brezgunov@gmail.com</a>&gt;</div>
+        <div data-ink="title" style="color:#d6ffe4;font-weight:700;font-size:16px;margin-top:13px;">{{ tayga.title }} — {{ tayga.role }}</div>
+        <div data-ink="dim" style="color:#7fb98f;font-style:italic;font-size:12.5px;margin-top:2px;">{{ tayga.ctx }}</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px;">
+          <sc-for list="{{ tayga.bullets }}" as="b" hint-placeholder-count="1">
+            <div style="display:flex;gap:9px;"><span style="color:#0f5a2c;flex:0 0 auto;">-</span><span style="color:#a9e6bf;font-size:13.5px;">{{ b }}</span></div>
+          </sc-for>
+        </div>
+        <div data-ink="dim" style="color:#1f9d52;font-size:12.5px;margin-top:12px;"><span style="color:#239f57;">stack:</span> {{ tayga.stack }}</div>
+      </div>
+    </div>
+
+    <!-- ===== commit: education (root) ===== -->
+    <div style="display:flex;">
+      <div style="flex:0 0 26px;position:relative;">
+        <div data-rail style="position:absolute;left:11px;top:0;height:8px;width:2px;background:#1c5e35;"></div>
+        <div data-node style="position:absolute;left:4px;top:6px;color:#9be8b4;font-size:15px;line-height:1;text-shadow:0 0 9px rgba(52,232,121,.65);">●</div>
+      </div>
+      <div style="flex:1;min-width:0;padding:6px 0 8px 8px;">
+        <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;">commit 0000001</span>
+          <span data-ink="accent" style="color:#cdd66b;font-size:12.5px;">(root · git init)</span>
+          <span data-ink="dim" style="color:#1f9d52;font-size:12.5px;white-space:nowrap;margin-left:auto;">{{ edu.period }}</span>
+        </div>
+        <div data-ink="title" style="color:#d6ffe4;font-weight:700;font-size:15px;margin-top:11px;">{{ edu.institution }}</div>
+        <div data-ink="dim" style="color:#a9e6bf;font-size:13px;margin-top:2px;">{{ edu.degree }}</div>
+      </div>
+    </div>
+
+    <!-- ===== skills ===== -->
+    <div data-ink="dim" style="font-size:12.5px;color:#1f9d52;margin:42px 0 14px;">## skills</div>
+    <div style="display:flex;flex-direction:column;gap:7px;">
+      <sc-for list="{{ skills }}" as="s" hint-placeholder-count="8">
+        <div style="display:flex;gap:9px;align-items:baseline;"><span style="color:#0f5a2c;flex:0 0 auto;">-</span><span data-ink="accent" style="display:inline-block;width:12ch;color:#7fb98f;flex:0 0 auto;font-size:13px;">{{ s.k }}</span><span style="color:#a9e6bf;font-size:13.5px;">{{ s.v }}</span></div>
+      </sc-for>
+    </div>
+
+    <!-- ===== contact ===== -->
+    <div data-ink="dim" style="font-size:12.5px;color:#1f9d52;margin:42px 0 14px;">## contact</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;">
+      <div><span style="color:#0f5a2c;">-</span> <span style="display:inline-block;width:11ch;color:#1f9d52;">email</span><a href="mailto:sasha.brezgunov@gmail.com" style="color:#34e879;text-decoration:none;border-bottom:1px solid #2a7a45;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">sasha.brezgunov@gmail.com</a></div>
+      <div><span style="color:#0f5a2c;">-</span> <span style="display:inline-block;width:11ch;color:#1f9d52;">telegram</span><a href="https://t.me/sk8destroy" target="_blank" rel="noopener" style="color:#34e879;text-decoration:none;border-bottom:1px solid #2a7a45;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">@sk8destroy</a></div>
+      <div><span style="color:#0f5a2c;">-</span> <span style="display:inline-block;width:11ch;color:#1f9d52;">github</span><a href="https://github.com/jhartum" target="_blank" rel="noopener" style="color:#34e879;text-decoration:none;border-bottom:1px solid #2a7a45;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">github.com/jhartum</a></div>
+      <div><span style="color:#0f5a2c;">-</span> <span style="display:inline-block;width:11ch;color:#1f9d52;">location</span><span style="color:#a9e6bf;">{{ contact.city }}</span></div>
+      <div><span style="color:#0f5a2c;">-</span> <span style="display:inline-block;width:11ch;color:#1f9d52;">languages</span><span style="color:#a9e6bf;">{{ contact.languages }}</span></div>
+    </div>
+
+    <div data-chrome style="margin-top:50px;border-top:1px solid #0f3d22;padding-top:16px;">
+      <sc-for list="{{ termLines }}" as="t" hint-placeholder-count="0">
+        <div style="white-space:pre-wrap;word-break:break-word;color:#239f57;font-size:13px;">{{ t }}</div>
+      </sc-for>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px;">
+        <span style="color:#34e879;font-size:13px;white-space:nowrap;">guest@cv:~$</span>
+        <input onKeyDown="{{ onKey }}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="help · home · :pdf" style="flex:1;min-width:40px;background:transparent;border:0;outline:0;color:#d6ffe4;font:13px/1.7 'IBM Plex Mono',monospace;caret-color:#7dffae;text-shadow:0 0 6px rgba(52,232,121,.3);"/>
+        <span style="color:#34e879;animation:blink 1.1s step-end infinite;font-size:13px;">▮</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<sc-if value="{{ crt }}" hint-placeholder-val="{{ true }}">
+  <div data-chrome style="position:fixed;inset:0;z-index:40;pointer-events:none;background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 1.5px, rgba(0,0,0,.20) 2.5px, rgba(0,0,0,.20) 3px);"></div>
+  <div data-chrome style="position:fixed;inset:0;z-index:41;pointer-events:none;background:radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0) 56%, rgba(0,0,0,.5) 100%);box-shadow:inset 0 0 190px rgba(0,0,0,.78);animation:flick 7s infinite;"></div>
+  <div data-chrome style="position:fixed;left:0;right:0;top:0;height:130px;z-index:42;pointer-events:none;background:linear-gradient(to bottom, rgba(52,232,121,0), rgba(52,232,121,.045), rgba(52,232,121,0));animation:sweep 8.5s linear infinite;"></div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1120, &quot;height&quot;: 760},
+  &quot;lang&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;ru&quot;, &quot;en&quot;], &quot;default&quot;: &quot;ru&quot;, &quot;tsType&quot;: &quot;string&quot;},
+  &quot;crt&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;}
+}">
+class Component extends DCLogic {
+  state = { lang: 'ru', crt: false, termLines: [] };
+
+  DATA = {
+    role:   { ru: 'Software Engineer · Fullstack · 5+ лет', en: 'Software Engineer · Fullstack · 5+ yrs' },
+    status: { ru: 'доступен для работы', en: 'available for work' },
+    about:  {
+      ru: 'Fullstack-инженер с 5+ годами опыта. Строю финансово-корректные backend-системы и B2B-продукты: CRM, платежи, интеграции, автоматизация операций. Сильная сторона — сложная доменная логика, конкурентные операции и доведение систем до продакшена. Использую LLM-инструменты как часть инженерного workflow: быстрее разбираю сложные кодовые базы, проектирую изменения, пишу тесты и провожу рефакторинг.',
+      en: 'Fullstack engineer with 5+ years of experience building financially correct backend systems and B2B products: CRM, payments, integrations, and operations automation. Strong in complex domain logic, concurrent workflows, and production delivery. Use LLM tools as part of my engineering workflow to navigate complex codebases, design changes, write tests and refactor faster.'
+    },
+    skills: [
+      { k: 'languages',  v: 'Python · TypeScript · Kotlin · SQL' },
+      { k: 'backend',    v: 'Python · Litestar · FastAPI · Django · SQLAlchemy · Ktor' },
+      { k: 'frontend',   v: 'React · HTMX' },
+      { k: 'data/async', v: 'PostgreSQL · Redis · RabbitMQ · Celery · TaskIQ' },
+      { k: 'automation', v: 'Kotlin · Appium · Selenide-Appium' },
+      { k: 'delivery',   v: 'Docker · Docker Swarm · GitLab CI · S3' },
+      { k: 'practices',  v: 'DDD · Clean Architecture · CQRS · Event-Driven · TDD' },
+      { k: 'tools',      v: 'LazyVim · Claude Code · pi.dev · tmux' }
+    ],
+    nesh: {
+      title:  { ru: 'НеШкола', en: 'NeSchool' },
+      period: { ru: '2022 — наст.вр.', en: '2022 — present' },
+      role:   { ru: 'Software Engineer', en: 'Software Engineer' },
+      ctx:    { ru: 'франчайзинговая сеть 150+ музыкальных школ', en: 'franchise network of 150+ music schools' },
+      bullets: {
+        ru: [
+          'Спроектировал и развиваю CRM для сети из 150+ школ — полный операционный цикл: лиды, пробные занятия, расписание, договоры, платежи и отчётность.',
+          'Интегрировал CRM с AmoCRM, телефонией и мессенджерами — автоматизировал обработку лидов, маршрутизацию звонков и уведомления. AI-анализ звонков заменяет ручной разбор, результаты уходят прямо в CRM.',
+          'Развивал внутреннее приложение для управления франчайзинговой сетью школ: партнёры, школы, сотрудники, тарифные планы и сводная аналитика по сети.',
+          'Разработал desktop-приложение для защищённой доставки учебных материалов — синхронизация и авто-обновление.'
+        ],
+        en: [
+          'Designed and maintain a CRM for 150+ schools covering the full operational cycle: leads, trial lessons, scheduling, contracts, payments and reporting.',
+          'Integrated the CRM with AmoCRM, telephony and messaging platforms — automated lead processing, call routing and notifications. AI call analysis replaces manual review, with results fed directly into the CRM.',
+          'Developed an internal app for managing the school franchise network: partners, schools, employees, subscription plans, and network-wide analytics.',
+          'Built a desktop app for secure delivery of teaching materials — sync and auto-update.'
+        ]
+      },
+      stack: 'Python · Litestar · FastAPI · PostgreSQL · RabbitMQ · React/TS · Yandex Cloud · Docker Swarm'
+    },
+    fin: {
+      title:  { ru: 'Финтех-платёжная платформа', en: 'Fintech Payment Platform' },
+      period: { ru: '2025 — 2026', en: '2025 — 2026' },
+      role:   { ru: 'Software Engineer', en: 'Software Engineer' },
+      ctx:    { ru: 'выплаты, сверка чеков, антифрод, интеграции с провайдерами (параллельный контракт)', en: 'payouts, receipt verification, anti-fraud, provider integrations (parallel contract)' },
+      bullets: {
+        ru: [
+          'Спроектировал и реализовал платёжную платформу с нуля — полный цикл выплат от заявки и резервирования до сверки и учёта.',
+          'Интегрировал 6 платёжных и антифрод-провайдеров с разными API, таймаутами и сценариями восстановления — автоматизировал операции, которые раньше выполнялись операторами вручную.',
+          'Обеспечил финансовую корректность при сбоях, повторах запросов и конкурентном доступе: идемпотентность, блокировки агрегатов, retry-логика и audit trail — нулевые потери и дубли.'
+        ],
+        en: [
+          'Designed and built a payment platform from scratch — the full payout lifecycle from request and reservation to reconciliation and accounting.',
+          'Integrated 6 payment and anti-fraud providers with different APIs, timeouts and error-recovery scenarios — automating operations previously done manually by operators.',
+          'Ensured financial correctness under failures, retries and concurrent access: idempotency, aggregate locks, retry logic and audit trail — zero losses or duplicates.'
+        ]
+      },
+      stack: 'Python · Litestar · HTMX · PostgreSQL · Kotlin/Ktor · Appium · Deno · Supabase · S3'
+    },
+    tayga: {
+      title:  { ru: 'Tayga.city', en: 'Tayga.city' },
+      period: { ru: '2021 — 2022', en: '2021 — 2022' },
+      role:   { ru: 'Fullstack Developer', en: 'Fullstack Developer' },
+      ctx:    { ru: 'портал недвижимости от медиа Tayga.info', en: 'real estate portal by Tayga.info media' },
+      bullets: {
+        ru: [ 'Провёл архитектурный рефакторинг крупнейшего в регионе портала недвижимости — внедрил dependency injection, разделил слои команд и запросов (CQRS), перевёл фоновую обработку изображений на тестируемую архитектуру.' ],
+        en: [ 'Architecturally refactored the largest regional real estate portal — introduced dependency injection, split command and query layers (CQRS), and restructured background image processing into a testable architecture.' ]
+      },
+      stack: 'Python · Django · GraphQL · Celery · PostgreSQL · Redis'
+    },
+    edu: {
+      institution: { ru: 'Новосибирский Профессионально-Педагогический Колледж', en: 'Novosibirsk Professional Pedagogical College' },
+      degree:      { ru: 'Техник-программист', en: 'Programming Technician' },
+      period: '2018 — 2024'
+    },
+    contact: {
+      city:      { ru: 'Москва · удалённо', en: 'Moscow · remote' },
+      languages: { ru: 'ru native · en B2', en: 'ru native · en B2' }
+    }
+  };
+
+  componentDidMount(){
+    let lang = 'ru';
+    try { const l = localStorage.getItem('cv-lang'); if (l === 'ru' || l === 'en') lang = l; } catch(e){}
+    const p = this.props || {};
+    const crt = !!p.crt;
+    this.setState({ lang, crt });
+  }
+
+  L(o){ return typeof o === 'string' ? o : (o[this.state.lang] ?? o.ru); }
+  job(j){ return { title: this.L(j.title), role: this.L(j.role), ctx: this.L(j.ctx), period: this.L(j.period), bullets: this.L(j.bullets), stack: j.stack }; }
+
+  setLang(l){ try { localStorage.setItem('cv-lang', l); } catch(e){} this.setState({ lang: l }); }
+  setRu = () => this.setLang('ru');
+  setEn = () => this.setLang('en');
+  toggleCrt = () => this.setState(s => ({ crt: !s.crt }));
+  doPrint = () => window.print();
+  goBlog = () => { window.location.href = 'Blog.dc.html'; };
+  onKey = (e) => { if (e.key === 'Enter') { const v = e.target.value; e.target.value = ''; this.runCmd(v); } };
+  scrollEnd(){ const el = document.querySelector('[data-screen-label="cv"]'); if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }); }
+
+  runCmd(raw){
+    const v = (raw || '').trim();
+    const ru = this.state.lang === 'ru';
+    const echo = 'guest@cv:~$ ' + v;
+    const cmd = v.split(/\s+/)[0];
+    let out = [];
+    if (!v) { out = []; }
+    else if (cmd === 'help') out = [ ru ? 'команды: home \u00b7 blog \u00b7 whoami \u00b7 skills \u00b7 :pdf \u00b7 clear' : 'commands: home \u00b7 blog \u00b7 whoami \u00b7 skills \u00b7 :pdf \u00b7 clear' ];
+    else if (cmd === 'home') { window.location.href = 'Home.dc.html'; return; }
+    else if (cmd === 'blog') { window.location.href = 'Blog.dc.html'; return; }
+    else if (cmd === 'cv') out = [ ru ? 'вы уже здесь — cv.txt.' : 'you are already here — cv.txt.' ];
+    else if (cmd === 'whoami') out = [ (ru ? 'Александр Брезгунов' : 'Aleksandr Brezgunov') + ' — Software Engineer \u00b7 Fullstack' ];
+    else if (cmd === 'skills') out = this.DATA.skills.map(s => s.k + ': ' + s.v);
+    else if (cmd === ':pdf' || cmd === 'pdf' || cmd === 'hardcopy') { window.print(); return; }
+    else if (cmd === 'clear') { this.setState({ termLines: [] }); return; }
+    
+    else out = [ 'zsh: command not found: ' + cmd + ' — ' + (ru ? 'наберите help' : 'type help') ];
+    this.setState(s => ({ termLines: [...s.termLines, echo, ...out] }), () => this.scrollEnd());
+  }
+
+  renderVals(){
+    const d = this.DATA;
+    return {
+      isRu: this.state.lang === 'ru',
+      isEn: this.state.lang === 'en',
+      crt: this.state.crt,
+      status: this.L(d.status),
+      about: this.L(d.about),
+      nesh: this.job(d.nesh),
+      fin: this.job(d.fin),
+      tayga: this.job(d.tayga),
+      edu: { institution: this.L(d.edu.institution), degree: this.L(d.edu.degree), period: d.edu.period },
+      skills: d.skills,
+      contact: { city: this.L(d.contact.city), languages: this.L(d.contact.languages) },
+      termLines: this.state.termLines,
+      setRu: this.setRu, setEn: this.setEn,
+      toggleCrt: this.toggleCrt, doPrint: this.doPrint, goBlog: this.goBlog, onKey: this.onKey
+    };
+  }
+}
+</script>
+</body>
+</html>
