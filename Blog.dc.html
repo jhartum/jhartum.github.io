@@ -68,12 +68,21 @@
       </div>
       <div style="height:1px;background:#0f3d22;margin:22px 0;"></div>
 
-      <p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;">{{ post.excerpt }}</p>
+      <p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;"><sc-for list="{{ post.excerptParts }}" as="ep" hint-placeholder-count="7"><sc-if value="{{ ep.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ ep.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ ep.text }}</a></sc-if><sc-if value="{{ ep.isText }}" hint-placeholder-val="{{ true }}"><span>{{ ep.text }}</span></sc-if></sc-for></p>
 
-      <div style="background:#08160d;border:1px solid #103a22;border-radius:5px;padding:14px 16px;font-size:12.5px;color:#7fb98f;margin:0 0 18px;white-space:pre-wrap;line-height:1.65;">{{ post.snippet }}</div>
+      <div data-ink="setup" style="margin:4px 0 14px;font-size:16px;font-weight:600;color:#d6ffe4;text-shadow:0 0 10px rgba(52,232,121,.4);">## {{ setupLabel }}</div>
 
-      <p style="margin:0 0 8px;color:#a9e6bf;font-size:14px;line-height:1.7;max-width:68ch;">{{ post.draftLead }}</p>
-      <p style="margin:0;color:#3f7a55;font-size:13px;line-height:1.7;max-width:68ch;">{{ post.draftNote }}</p>
+      <div style="margin:6px 0 8px;font-size:12.5px;color:#1f9d52;">{{ utilsLabel }}</div>
+      <sc-for list="{{ post.links }}" as="lnk" hint-placeholder-count="6">
+        <div style="line-height:1.9;">
+          <a href="{{ lnk.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;font-size:13.5px;border-bottom:1px solid #103a22;" style-hover="border-bottom-color:#7dffae;">→ {{ lnk.label }}</a><sc-for list="{{ lnk.descParts }}" as="dp" hint-placeholder-count="3"><sc-if value="{{ dp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ dp.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;font-size:13px;border-bottom:1px solid #103a22;" style-hover="border-bottom-color:#7dffae;">{{ dp.text }}</a></sc-if><sc-if value="{{ dp.isText }}" hint-placeholder-val="{{ true }}"><span style="color:#5a8a6a;font-size:13px;">{{ dp.text }}</span></sc-if></sc-for>
+        </div>
+        <sc-for list="{{ lnk.children }}" as="m" hint-placeholder-count="0">
+          <div style="line-height:1.9;margin-left:20px;border-left:1px solid #103a22;padding-left:12px;">
+            <a href="{{ m.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;font-size:13.5px;border-bottom:1px solid #103a22;" style-hover="border-bottom-color:#7dffae;">↳ {{ m.label }}</a><span style="color:#5a8a6a;font-size:13px;">{{ m.descStr }}</span>
+          </div>
+        </sc-for>
+      </sc-for>
 
       <div onClick="{{ closePost }}" style="margin-top:34px;font-size:13px;color:#1f9d52;cursor:pointer;display:inline-block;border-bottom:1px solid #2a7a45;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">{{ backLabel }}</div>
     </sc-if>
@@ -108,58 +117,35 @@ class Component extends DCLogic {
   state = { lang: 'ru', crt: false, openSlug: null, termLines: [] };
 
   POSTS = [
-    { date: '2026-06-12', slug: 'lazy-tool-search.md', read: { ru: '6 мин', en: '6 min' }, tags: ['agents', 'pi'],
-      title: { ru: 'Ленивый поиск инструментов: прячем тулзы до запроса', en: 'Lazy tool search: hiding tools until you ask' },
-      excerpt: { ru: 'Когда у агента сотни инструментов, контекст забивается их описаниями ещё до первого хода. pi-tool-search держит тулзы скрытыми и активирует их только когда поиск по метаданным находит совпадение.', en: 'When an agent has hundreds of tools, their descriptions flood the context before the first move. pi-tool-search keeps tools hidden and activates them only when a metadata search finds a match.' },
-      snippet: '$ pi tools --mode lazy\n› indexed 214 tools · 0 loaded\n› query "reddit" → matched 3 · activated' },
-    { date: '2026-05-28', slug: 'reddit-research-packs.md', read: { ru: '8 мин', en: '8 min' }, tags: ['mcp', 'reddit'],
-      title: { ru: 'Reddit research packs: компактный MCP-сервер', en: 'Reddit research packs: a compact MCP server' },
-      excerpt: { ru: 'MCP-сервер, который собирает обсуждения с Reddit в плотный «research pack» — без воды и рекламы, только то, что реально нужно модели для ответа.', en: 'An MCP server that collapses Reddit threads into a dense research pack — no fluff, no ads, just what the model actually needs to answer.' },
-      snippet: '$ mcp call reddit.research "litestar vs fastapi"\n› 4 threads · 37 comments → 1 pack (1.2k tokens)' },
-    { date: '2026-05-09', slug: 'ponytail-lazy-senior.md', read: { ru: '5 мин', en: '5 min' }, tags: ['agents', 'dx'],
-      title: { ru: 'Ponytail: агент, который думает как ленивый senior', en: 'Ponytail: an agent that thinks like the laziest senior' },
-      excerpt: { ru: 'Лучший код — тот, что ты не написал. Ponytail заставляет агента сначала искать существующее решение, а уже потом плодить новые абстракции.', en: 'The best code is the code you never wrote. Ponytail nudges the agent to find the existing solution first, and only then reach for a new abstraction.' },
-      snippet: '// ponytail.md\n> before writing: did this already exist?\n> before abstracting: do we need it twice?' },
-    { date: '2026-04-22', slug: 'recursive-language-models.md', read: { ru: '9 мин', en: '9 min' }, tags: ['llm', 'pi'],
-      title: { ru: 'Recursive Language Models: модель, которая зовёт сама себя', en: 'Recursive Language Models: a model that calls itself' },
-      excerpt: { ru: 'Расширение pi-rlm разбивает большую задачу на под-вызовы той же модели — рекурсия вместо одного гигантского промпта. Когда это помогает, а когда только жжёт токены.', en: 'The pi-rlm extension splits a large task into recursive sub-calls of the same model — recursion instead of one giant prompt. When it helps, and when it just burns tokens.' },
-      snippet: '$ pi rlm --depth 3 "refactor module"\n› split → 7 leaves → merge → 1 patch' },
-    { date: '2026-04-03', slug: 'local-llms-on-a-budget.md', read: { ru: '7 мин', en: '7 min' }, tags: ['llm', 'local'],
-      title: { ru: 'Локальные LLM на одной видеокарте', en: 'Local LLMs on a single GPU' },
-      excerpt: { ru: 'Какие модели реально тащат кодинг-задачи на 24 ГБ VRAM, как их квантовать и где облако всё ещё выигрывает. Замеры, а не вайбы.', en: 'Which models actually handle coding tasks on 24GB of VRAM, how to quantise them, and where the cloud still wins. Measurements, not vibes.' },
-      snippet: '$ llama-bench -m qwen-coder-q5 --tg 256\n› 41 tok/s · ctx 32k · fits in 22.4 GB' },
-    { date: '2026-03-18', slug: 'multi-auth-compat.md', read: { ru: '4 мин', en: '4 min' }, tags: ['pi', 'auth'],
-      title: { ru: 'pi-multi-auth: несколько провайдеров без боли', en: 'pi-multi-auth: many providers without the pain' },
-      excerpt: { ru: 'Форк с фиксом совместимости: переключение между провайдерами и ключами так, чтобы старые конфиги продолжали работать как есть.', en: 'A fork with a compat fix: switching between providers and keys so that old configs keep working exactly as they were.' },
-      snippet: '~/.pi/auth.toml\n[provider.local]  [provider.cloud]\n› fallback chain preserved' },
-    { date: '2026-02-27', slug: 'youtrack-mcp.md', read: { ru: '6 мин', en: '6 min' }, tags: ['mcp', 'jetbrains'],
-      title: { ru: 'MCP-сервер для YouTrack', en: 'An MCP server for YouTrack' },
-      excerpt: { ru: 'Подключаем трекер JetBrains к агенту: задачи, спринты и комментарии как инструменты. Агент сам заводит тикеты по результатам ревью.', en: 'Wiring the JetBrains tracker into the agent: issues, sprints and comments as tools. The agent files tickets from review results on its own.' },
-      snippet: '$ mcp call youtrack.create "flaky test in payments"\n› YT-2841 created · assigned' },
-    { date: '2026-02-06', slug: 'litestar-htmx-fullstack.md', read: { ru: '10 мин', en: '10 min' }, tags: ['python', 'htmx'],
-      title: { ru: 'Litestar + HTMX: фуллстек без SPA', en: 'Litestar + HTMX: fullstack without an SPA' },
-      excerpt: { ru: 'Как собрать живой интерфейс на серверном рендере и HTMX — без сборщиков, гидрации и npm-ада. Где это блестит, а где упирается в стену.', en: 'Building a live UI on server rendering and HTMX — no bundlers, no hydration, no npm hell. Where it shines, and where it hits a wall.' },
-      snippet: '@get("/rows")\nasync def rows() -> Template:\n    return Template("rows.html", ...)' },
-    { date: '2026-01-20', slug: 'race-conditions-payments.md', read: { ru: '11 мин', en: '11 min' }, tags: ['python', 'fintech'],
-      title: { ru: 'Race conditions в платежах: как не потерять деньги', en: 'Race conditions in payments: how not to lose money' },
-      excerpt: { ru: 'Идемпотентность, блокировки агрегатов и retry-логика на реальном платёжном контуре. Что ломается под конкурентным доступом и как это поймать в тестах.', en: 'Idempotency, aggregate locks and retry logic on a real payment flow. What breaks under concurrent access and how to catch it in tests.' },
-      snippet: 'async with lock(aggregate_id):\n    if seen(idempotency_key): return cached\n    ...' },
-    { date: '2025-12-15', slug: 'xmpp-from-scratch.md', read: { ru: '8 мин', en: '8 min' }, tags: ['xmpp', 'systems'],
-      title: { ru: 'Пишу XMPP-сервер с нуля', en: 'Writing an XMPP server from scratch' },
-      excerpt: { ru: 'jhaber — маленький XMPP-сервер ради понимания протокола: stanzas, presence, roster. Зачем это в 2026 и что я вынес из реализации.', en: 'jhaber — a tiny XMPP server built to actually understand the protocol: stanzas, presence, roster. Why bother in 2026 and what I took away.' },
-      snippet: '<message to="a@cv" from="b@cv">\n  <body>ping</body>\n</message>' },
-    { date: '2025-11-28', slug: 'telegram-web-apps.md', read: { ru: '7 мин', en: '7 min' }, tags: ['telegram', 'frontend'],
-      title: { ru: 'Telegram Web Apps на практике', en: 'Telegram Web Apps in practice' },
-      excerpt: { ru: 'partymanager — управление вечеринкой через бота и Web App. Тема, haptics, авторизация по initData и подводные камни верстки внутри Telegram.', en: 'partymanager — running a party through a bot and a Web App. Theming, haptics, initData auth and the quirks of laying out UI inside Telegram.' },
-      snippet: 'Telegram.WebApp.ready()\nTelegram.WebApp.MainButton.setText("Go")' },
-    { date: '2025-11-05', slug: 'ruff-ty-rust-tooling.md', read: { ru: '6 мин', en: '6 min' }, tags: ['python', 'rust'],
-      title: { ru: 'Почему Python-тулинг переезжает на Rust', en: 'Why Python tooling is moving to Rust' },
-      excerpt: { ru: 'ruff и ty показывают, как линтер и тайпчекер на Rust меняют ощущение от работы — фидбек становится мгновенным. Что это значит для воркфлоу.', en: 'ruff and ty show how a Rust linter and type checker change the feel of the work — feedback becomes instant. What that means for the workflow.' },
-      snippet: '$ ruff check .   # 12k files\n› done in 84ms' },
-    { date: '2025-10-12', slug: 'soundcloud-saver.md', read: { ru: '3 мин', en: '3 min' }, tags: ['scripts'],
-      title: { ru: 'soundcloud-saver: mp3 и обложка одной командой', en: 'soundcloud-saver: mp3 + cover in one command' },
-      excerpt: { ru: 'Крошечный скрипт выходного дня: тянет трек как mp3 вместе с обложкой и тегами. Иногда лучший инструмент — это 40 строк.', en: 'A tiny weekend script: pulls a track as mp3 along with its cover art and tags. Sometimes the best tool is 40 lines.' },
-      snippet: '$ scsave https://soundcloud.com/...\n› track.mp3 + cover.jpg + id3 tags' }
+    { date: '2026-06-20', slug: 'context-rot-opencode-to-pi.md', read: { ru: '2 мин', en: '2 min' }, tags: ['pi', 'context'],
+      title: { ru: 'Context rot: переехал с OpenCode на Pi', en: 'Context rot: moved from OpenCode to Pi' },
+      excerpt: { ru: 'Context rot меня достал. Переехал с OpenCode на Pi. <1k system prompt. На дешевых open source моделях ощутимо лучше.', en: 'Context rot got me. Moved from OpenCode to Pi: <1k system prompt. Noticeably better on cheap open-source models.' },
+      refs: [
+        { label: 'context rot', url: 'https://www.trychroma.com/research/context-rot' },
+        { label: 'OpenCode',    url: 'https://opencode.ai' },
+        { label: 'Pi',          url: 'https://pi.dev' }
+      ],
+      links: [
+        { label: 'pi-context-usage', url: 'https://github.com/championswimmer/pi-context-usage', desc: { ru: 'подробный просмотр контекста текущего чата', en: 'detailed view of the current chat\'s context' } },
+        { label: 'pi-tps-meter',     url: 'https://www.npmjs.com/package/pi-tps-meter',          desc: { ru: '', en: '' } },
+        { label: 'pi-rtk-optimizer', url: 'https://www.npmjs.com/package/pi-rtk-optimizer',      desc: { ru: 'токен-оптимизация вывода bash-команд', en: 'token optimization of bash command output' } },
+        { label: 'pi-multi-auth',    url: 'https://github.com/jhartum/pi-multi-auth',            desc: { ru: '', en: '' } },
+        { label: 'ponytail',         url: 'https://github.com/jhartum/ponytail',                 desc: { ru: 'скилл для ревью кода', en: 'a code-review skill' } },
+        { label: 'telepi',           url: 'https://github.com/benedict2310/TelePi',              descParts: [
+            { text: { ru: ' — Telegram-мост: Pi становится как ', en: ' — Telegram bridge: Pi becomes like ' }, url: '' },
+            { text: { ru: 'Hermes', en: 'Hermes' }, url: 'https://hermes-agent.nousresearch.com/' },
+            { text: { ru: '/', en: '/' }, url: '' },
+            { text: { ru: 'OpenClaw', en: 'OpenClaw' }, url: 'https://openclaw.ai/' },
+            { text: { ru: ', только без перегруза', en: ', just without the bloat' }, url: '' }
+          ] },
+        { label: 'pi-mcp-adapter',   url: 'https://www.npmjs.com/package/pi-mcp-adapter',        desc: { ru: '', en: '' },
+          children: [
+            { label: 'reddit-research', url: 'https://github.com/jhartum/reddit-research-mcp',         desc: { ru: '', en: '' } },
+            { label: 'exa',                 url: 'https://mcp.exa.ai',                                     desc: { ru: 'веб-поиск', en: 'web search' } },
+            { label: 'pdf-reader',          url: 'https://www.npmjs.com/package/@sylphx/pdf-reader-mcp',   desc: { ru: '', en: '' } },
+            { label: 'firefox',     url: 'https://www.npmjs.com/package/@mozilla/firefox-devtools-mcp',     desc: { ru: '', en: '' } }
+          ] }
+      ] }
   ];
 
   componentDidMount(){
@@ -172,6 +158,15 @@ class Component extends DCLogic {
 
   L(o){ return typeof o === 'string' ? o : (o[this.state.lang] ?? o.ru); }
   tagsStr(p){ return '[' + p.tags.join(', ') + ']'; }
+  descParts(descParts, fallback){
+    const src = (descParts && descParts.length) ? descParts : [{ text: fallback || '' }];
+    return src.map(part => {
+      if (typeof part === 'string') return { text: part, isText: true, isLink: false };
+      const text = part.text ? this.L(part.text) : '';
+      const url = part.url || '';
+      return { text, url, isText: !url, isLink: !!url };
+    });
+  }
 
   setLang(l){ try { localStorage.setItem('cv-lang', l); } catch(e){} this.setState({ lang: l }); }
   setRu = () => this.setLang('ru');
@@ -220,17 +215,36 @@ class Component extends DCLogic {
       open: () => this.openPost(p.slug)
     }));
     const cur = this.POSTS.find(p => p.slug === this.state.openSlug);
+    const mapLink = (l) => { const d = l.desc ? this.L(l.desc) : ''; return { label: l.label, url: l.url, descStr: d ? ' — ' + d : '', descParts: this.descParts(l.descParts, d ? ' — ' + d : ''), children: (l.children || []).map(mapLink) }; };
+    const buildExcerptParts = (text, refs) => {
+      let parts = [{ text, isText: true, isLink: false }];
+      for (const ref of refs) {
+        const next = [];
+        for (const p of parts) {
+          if (!p.isText) { next.push(p); continue; }
+          const i = p.text.indexOf(ref.label);
+          if (i === -1) { next.push(p); continue; }
+          if (i > 0) next.push({ text: p.text.slice(0, i), isText: true, isLink: false });
+          next.push({ text: ref.label, url: ref.url, isText: false, isLink: true });
+          if (i + ref.label.length < p.text.length) next.push({ text: p.text.slice(i + ref.label.length), isText: true, isLink: false });
+        }
+        parts = next;
+      }
+      return parts;
+    };
     const post = cur ? {
       slug: cur.slug, title: this.L(cur.title), date: cur.date, read: this.L(cur.read),
-      tagsStr: this.tagsStr(cur), excerpt: this.L(cur.excerpt), snippet: cur.snippet,
-      draftLead: ru ? 'Полный разбор — с замерами, кодом и граблями — скоро будет здесь.' : 'The full write-up — with measurements, code and the gotchas — is coming here soon.',
-      draftNote: ru ? '// черновик · это заглушка структуры блога. содержимое появится позже.' : '// draft · this is a placeholder for the blog structure. content lands later.'
+      tagsStr: this.tagsStr(cur),
+      excerptParts: buildExcerptParts(this.L(cur.excerpt), cur.refs || []),
+      links: (cur.links || []).map(mapLink)
     } : null;
     return {
       isRu: ru, isEn: !ru, crt: this.state.crt,
       isList: !this.state.openSlug, isReader: !!this.state.openSlug,
       posts, post, total: this.POSTS.length,
       lsHint: ru ? 'открывает запись' : 'opens a post',
+      setupLabel: 'setup',
+      utilsLabel: '// extensions:',
       backLabel: ru ? '← ls ~/blog' : '← ls ~/blog',
       termLines: this.state.termLines,
       setRu: this.setRu, setEn: this.setEn, toggleCrt: this.toggleCrt,

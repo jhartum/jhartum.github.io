@@ -71,35 +71,27 @@
     </div>
 
     <div style="font-size:12.5px;color:#1f9d52;margin:44px 0 14px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
-      <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span>## последние записи</span></sc-if>
-      <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span>## latest posts</span></sc-if>
-      <span style="color:#0f3d22;">— ls ~/blog | head -2</span>
+      <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span>## последняя запись</span></sc-if>
+      <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span>## latest post</span></sc-if>
+      <span style="color:#0f3d22;">— ls ~/blog | head -1</span>
     </div>
     <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;flex-direction:column;gap:13px;">
         <div onClick="{{ goBlog }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-06-12</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Ленивый поиск инструментов: прячем тулзы до запроса</span>
-        </div>
-        <div onClick="{{ goBlog }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-05-28</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Reddit research packs: компактный MCP-сервер</span>
+          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-06-20</span>
+          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Context rot: переехал с OpenCode на Pi</span>
         </div>
       </div>
-      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">ещё 11 записей в ~/blog →</div>
+      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">открыть ~/blog →</div>
     </sc-if>
     <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:13px;">
         <div onClick="{{ goBlog }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-06-12</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Lazy tool search: hiding tools until you ask</span>
-        </div>
-        <div onClick="{{ goBlog }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-05-28</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Reddit research packs: a compact MCP server</span>
+          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-06-20</span>
+          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">Context rot: moved from OpenCode to Pi</span>
         </div>
       </div>
-      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">11 more posts in ~/blog →</div>
+      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">open ~/blog →</div>
     </sc-if>
 
     <div style="margin-top:52px;border-top:1px solid #0f3d22;padding-top:16px;">
