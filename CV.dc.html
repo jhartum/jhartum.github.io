@@ -215,7 +215,7 @@
   &quot;crt&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;}
 }">
 class Component extends DCLogic {
-  state = { lang: 'ru', crt: false, termLines: [] };
+  state = { lang: 'en', crt: false, termLines: [] };
 
   DATA = {
     role:   { ru: 'Software Engineer · Fullstack · 5+ лет', en: 'Software Engineer · Fullstack · 5+ yrs' },
@@ -297,7 +297,7 @@ class Component extends DCLogic {
   };
 
   componentDidMount(){
-    let lang = 'ru';
+    let lang = 'en';
     try { const l = localStorage.getItem('cv-lang'); if (l === 'ru' || l === 'en') lang = l; } catch(e){}
     const p = this.props || {};
     const crt = !!p.crt;

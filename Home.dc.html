@@ -131,7 +131,7 @@
   &quot;crt&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;}
 }">
 class Component extends DCLogic {
-  state = { booting: true, revealed: 0, lang: 'ru', crt: false, termLines: [] };
+  state = { booting: true, revealed: 0, lang: 'en', crt: false, termLines: [] };
   BOOT = [
     'ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL',
     'ESTABLISHING UPLINK . . .',
@@ -149,7 +149,7 @@ class Component extends DCLogic {
 
   componentDidMount(){
     const p = this.props || {};
-    let lang = p.lang || 'ru';
+    let lang = p.lang || 'en';
     try { const l = localStorage.getItem('cv-lang'); if (l === 'ru' || l === 'en') lang = l; } catch(e){}
     const crt = !!p.crt;
     const wantBoot = p.boot !== false;
