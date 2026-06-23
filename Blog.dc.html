@@ -153,7 +153,16 @@ class Component extends DCLogic {
     try { const l = localStorage.getItem('cv-lang'); if (l === 'ru' || l === 'en') lang = l; } catch(e){}
     const p = this.props || {};
     const crt = !!p.crt;
-    this.setState({ lang, crt });
+    let openSlug = null;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const postParam = params.get('post');
+      if (postParam) {
+        const found = this.POSTS.find(s => s.slug === postParam || s.slug.replace(/\.md$/, '') === postParam);
+        if (found) openSlug = found.slug;
+      }
+    } catch(e){}
+    this.setState({ lang, crt, openSlug });
   }
 
   L(o){ return typeof o === 'string' ? o : (o[this.state.lang] ?? o.ru); }
