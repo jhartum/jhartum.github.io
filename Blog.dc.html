@@ -68,9 +68,9 @@
       </div>
       <div style="height:1px;background:#0f3d22;margin:22px 0;"></div>
 
-      <p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;"><sc-for list="{{ post.excerptParts }}" as="ep" hint-placeholder-count="7"><sc-if value="{{ ep.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ ep.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ ep.text }}</a></sc-if><sc-if value="{{ ep.isText }}" hint-placeholder-val="{{ true }}"><span>{{ ep.text }}</span></sc-if></sc-for></p>
+            <sc-for list="{{ post.bodyParagraphs }}" as="para" hint-placeholder-count="6"><p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;"><sc-for list="{{ para }}" as="ep" hint-placeholder-count="7"><sc-if value="{{ ep.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ ep.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ ep.text }}</a></sc-if><sc-if value="{{ ep.isText }}" hint-placeholder-val="{{ true }}"><span>{{ ep.text }}</span></sc-if></sc-for></p></sc-for>
 
-      <div data-ink="setup" style="margin:4px 0 14px;font-size:16px;font-weight:600;color:#d6ffe4;text-shadow:0 0 10px rgba(52,232,121,.4);">## {{ setupLabel }}</div>
+          <sc-if value="{{ post.hasLinks }}"><div data-ink="setup" style="margin:4px 0 14px;font-size:16px;font-weight:600;color:#d6ffe4;text-shadow:0 0 10px rgba(52,232,121,.4);">## {{ setupLabel }}</div>
 
       <div style="margin:6px 0 8px;font-size:12.5px;color:#1f9d52;">{{ utilsLabel }}</div>
       <sc-for list="{{ post.links }}" as="lnk" hint-placeholder-count="6">
@@ -83,6 +83,7 @@
           </div>
         </sc-for>
       </sc-for>
+    </sc-if>
 
       <div onClick="{{ closePost }}" style="margin-top:34px;font-size:13px;color:#1f9d52;cursor:pointer;display:inline-block;border-bottom:1px solid #2a7a45;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">{{ backLabel }}</div>
     </sc-if>
@@ -117,6 +118,28 @@ class Component extends DCLogic {
   state = { lang: 'en', crt: false, openSlug: null, termLines: [] };
 
   POSTS = [
+    { date: '2026-07-20', slug: 'revdiff-terminal-code-review-for-coding-agents.md', read: { ru: '2 мин', en: '2 min' }, tags: ['revdiff', 'pi', 'code-review', 'workflow'],
+      title: { ru: 'revdiff: последний missing piece terminal-only workflow', en: 'revdiff: the last missing piece of a terminal-only workflow' },
+      excerpt: { ru: 'Я живу в терминале: nvim, gitui, Herdr, Pi.\n\nРаньше ревью с агентом было таким: нашёл спорное место в diff → прыгнул в соседнюю панель → попытался текстом объяснить, где оно → прыгнул назад за контекстом.\n\nРаботает. Но бесит.\n\nТеперь просто /revdiff.\n\nОткрывается UI для diff. Оставляю комментарий прямо на нужном месте, выхожу — аннотации прилетают агенту. Он видит и замечание, и контекст.\n\nНе новая IDE. Просто маленькая штука, которая убрала самый раздражающий разрыв в моём terminal-only workflow.\n\nНет копипасты. Нет прыжков по панелям. Нет «ну там где-то в этом файле».', en: 'I live in the terminal: nvim, gitui, Herdr, Pi.\n\nReviewing agent code used to look like this: find something questionable in the diff → jump to the next pane → try to explain where it is → jump back for context.\n\nIt works. But it sucks.\n\nNow just /revdiff.\n\nOpens a diff UI. Leave a comment right on the spot, exit — annotations come back to the agent. They see both the note and the context.\n\nNot a new IDE. Just a small thing that eliminated the most annoying gap in my terminal-only workflow.\n\nNo copy-paste. No pane-hopping. No «it\'s somewhere in that file».' },      refs: [
+        { label: 'nvim',    url: 'https://neovim.io' },
+        { label: 'gitui',   url: 'https://github.com/extrawurst/gitui' },
+        { label: 'Herdr',   url: 'https://herdr.dev' },
+        { label: 'Pi',      url: 'https://pi.dev' },
+        { label: 'revdiff', url: 'https://revdiff.com' }
+      ],
+      links: [] },
+
+    
+
+    { date: '2026-07-14', slug: 'tmux-to-herdr-terminal-multiplexer-for-ai-workflows.md', read: { ru: '2 мин', en: '2 min' }, tags: ['herdr', 'tmux', 'workflow', 'terminal'],
+      title: { ru: 'tmux → herdr: terminal multiplexer для AI-воркфлоу', en: 'tmux → herdr: terminal multiplexer for AI workflows' },
+      excerpt: { ru: 'Годы на tmux. Привык, настроил, сросся.\n\nHerdr — тот же tmux по духу. Только с удобным UI: мышка, перетаскивание панелей и tmux-совместимые хоткеи.\n\nПлюс он дружит с AI harnesses: видит статус агента (working/idle/done) и даёт ему управлять панелями, табами и воркспейсами через CLI.\n\nПереезд занял вечер. Tmux теперь только на серверах.\n\nТерминал — тот же. Но для мира, где агент — второй участник сессии.', en: 'Years on tmux. Muscle memory, config, everything.\n\nHerdr is tmux in spirit. Just with a friendly UI: mouse support, draggable panes, and tmux-compatible hotkeys.\n\nIt also integrates with AI harnesses: it sees agent status (working/idle/done) and lets agents manage panes, tabs, and workspaces through its CLI.\n\nThe switch took one evening. Tmux only lives on servers now.\n\nSame terminal. But for a world where the agent is a second participant.' },
+      refs: [
+        { label: 'tmux',  url: 'https://github.com/tmux/tmux' },
+        { label: 'Herdr', url: 'https://herdr.dev' }
+      ],
+      links: [] },
+
     { date: '2026-06-20', slug: 'context-rot-opencode-to-pi.md', read: { ru: '2 мин', en: '2 min' }, tags: ['pi', 'context'],
       title: { ru: 'Context rot: переехал с OpenCode на Pi', en: 'Context rot: moved from OpenCode to Pi' },
       excerpt: { ru: 'Context rot меня достал. Переехал с OpenCode на Pi. <1k system prompt. На дешевых open source моделях ощутимо лучше.', en: 'Context rot got me. Moved from OpenCode to Pi: <1k system prompt. Noticeably better on cheap open-source models.' },
@@ -244,8 +267,9 @@ class Component extends DCLogic {
     const post = cur ? {
       slug: cur.slug, title: this.L(cur.title), date: cur.date, read: this.L(cur.read),
       tagsStr: this.tagsStr(cur),
-      excerptParts: buildExcerptParts(this.L(cur.excerpt), cur.refs || []),
-      links: (cur.links || []).map(mapLink)
+      bodyParagraphs: this.L(cur.excerpt).split('\n\n').filter(p => p.trim()).map(p => buildExcerptParts(p.trim(), cur.refs || [])),
+      links: (cur.links || []).map(mapLink),
+      hasLinks: (cur.links || []).length > 0
     } : null;
     return {
       isRu: ru, isEn: !ru, crt: this.state.crt,
