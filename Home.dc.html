@@ -71,28 +71,19 @@
     </div>
 
     <div style="font-size:12.5px;color:#1f9d52;margin:44px 0 14px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;">
-      <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span>## последняя запись</span></sc-if>
-      <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span>## latest post</span></sc-if>
-      <span style="color:#0f3d22;">— ls ~/blog | head -1</span>
+      <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span>## последние записи</span></sc-if>
+      <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span>## latest posts</span></sc-if>
+      <span style="color:#0f3d22;">— ls ~/blog | head -3</span>
     </div>
-    <sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}">
-      <div style="display:flex;flex-direction:column;gap:13px;">
-        <div onClick="{{ goLatestPost }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-07-20</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">revdiff: последний missing piece terminal-only workflow</span>
+    <div style="display:flex;flex-direction:column;gap:13px;">
+      <sc-for list="{{ latestPosts }}" as="p" hint-placeholder-count="3">
+        <div onClick="{{ p.open }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
+          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">{{ p.date }}</span>
+          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">{{ p.title }}</span>
         </div>
-      </div>
-      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">открыть ~/blog →</div>
-    </sc-if>
-    <sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;flex-direction:column;gap:13px;">
-        <div onClick="{{ goLatestPost }}" style="cursor:pointer;display:flex;gap:16px;align-items:baseline;">
-          <span style="color:#1f9d52;font-size:12.5px;white-space:nowrap;">2026-07-20</span>
-          <span style="color:#cdeedb;border-bottom:1px solid #1c5e35;" style-hover="color:#7dffae;border-bottom-color:#7dffae;">revdiff: the last missing piece of a terminal-only workflow</span>
-        </div>
-      </div>
-      <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;">open ~/blog →</div>
-    </sc-if>
+      </sc-for>
+    </div>
+    <div onClick="{{ goBlog }}" style="margin-top:15px;font-size:12.5px;color:#1f9d52;cursor:pointer;" style-hover="color:#7dffae;"><sc-if value="{{ isRu }}" hint-placeholder-val="{{ true }}"><span>открыть ~/blog →</span></sc-if><sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}"><span>open ~/blog →</span></sc-if></div>
 
     <div style="margin-top:52px;border-top:1px solid #0f3d22;padding-top:16px;">
       <sc-for list="{{ termLines }}" as="t" hint-placeholder-count="0">
@@ -132,6 +123,11 @@
 }">
 class Component extends DCLogic {
   state = { booting: true, revealed: 0, lang: 'en', crt: false, termLines: [] };
+  LATEST_POSTS = [
+    { date: '2026-07-23', slug: 'shared-ai-assistant-for-the-team-in-telegram.md', title: { ru: 'Общий AI-ассистент команды в Telegram', en: 'A shared AI assistant for the team in Telegram' } },
+    { date: '2026-07-20', slug: 'revdiff-terminal-code-review-for-coding-agents.md', title: { ru: 'revdiff: последний missing piece terminal-only workflow', en: 'revdiff: the last missing piece of a terminal-only workflow' } },
+    { date: '2026-07-14', slug: 'tmux-to-herdr-terminal-multiplexer-for-ai-workflows.md', title: { ru: 'tmux → herdr: terminal multiplexer для AI-воркфлоу', en: 'tmux → herdr: terminal multiplexer for AI workflows' } }
+  ];
   BOOT = [
     'ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL',
     'ESTABLISHING UPLINK . . .',
@@ -185,8 +181,6 @@ class Component extends DCLogic {
   setEn = () => this.setLang('en');
   toggleCrt = () => this.setState(s => ({ crt: !s.crt }));
   goHomeTop = () => { const el = document.querySelector('[data-screen-label="home"]'); if (el) el.scrollTo({ top: 0, behavior: 'smooth' }); };
-  latestPostSlug = 'revdiff-terminal-code-review-for-coding-agents.md';
-  goLatestPost = () => this.goBlogPost(this.latestPostSlug);
   goBlog = () => { window.location.href = 'Blog.dc.html'; };
   goBlogPost = (slug) => { window.location.href = 'Blog.dc.html?post=' + encodeURIComponent(slug); };
   goCv = () => { window.location.href = 'CV.dc.html'; };
@@ -215,16 +209,22 @@ class Component extends DCLogic {
 
   renderVals(){
     const lang = this.state.lang;
+    const latestPosts = this.LATEST_POSTS.map(p => ({
+      date: p.date,
+      title: p.title[lang] || p.title.ru,
+      open: () => this.goBlogPost(p.slug)
+    }));
     return {
       booting: this.state.booting,
       crt: this.state.crt,
       isRu: lang === 'ru',
       isEn: lang === 'en',
       bootLines: this.BOOT.slice(0, this.state.revealed),
+      latestPosts,
       termLines: this.state.termLines,
       setRu: this.setRu, setEn: this.setEn,
       toggleCrt: this.toggleCrt,
-      goHomeTop: this.goHomeTop, goBlog: this.goBlog, goBlogPost: this.goBlogPost, goLatestPost: this.goLatestPost, goCv: this.goCv,
+      goHomeTop: this.goHomeTop, goBlog: this.goBlog, goBlogPost: this.goBlogPost, goCv: this.goCv,
       onKey: this.onKey, skipBoot: this.skipBoot
     };
   }
