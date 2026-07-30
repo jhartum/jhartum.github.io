@@ -277,11 +277,17 @@ class Component extends DCLogic {
     tayga: {
       title:  { ru: 'Tayga.city', en: 'Tayga.city' },
       period: { ru: '2021 — 2022', en: '2021 — 2022' },
-      role:   { ru: 'Fullstack Developer', en: 'Fullstack Developer' },
+      role:   { ru: 'Backend Developer', en: 'Backend Developer' },
       ctx:    { ru: 'портал недвижимости от медиа Tayga.info', en: 'real estate portal by Tayga.info media' },
       bullets: {
-        ru: [ 'Провёл архитектурный рефакторинг крупнейшего в регионе портала недвижимости — внедрил dependency injection, разделил слои команд и запросов (CQRS), перевёл фоновую обработку изображений на тестируемую архитектуру.' ],
-        en: [ 'Architecturally refactored the largest regional real estate portal — introduced dependency injection, split command and query layers (CQRS), and restructured background image processing into a testable architecture.' ]
+        ru: [
+          'Реализовал backend формы заявок с карточек объектов: GraphQL-мутацию, валидацию телефона, сохранение лидов и email-уведомления.',
+          'Поддерживал обработку изображений в Celery и интеграцию с Yandex Object Storage: исправлял ошибки, настраивал воркеры и добавлял автотесты.'
+        ],
+        en: [
+          'Implemented the backend for property inquiry forms: a GraphQL mutation, phone-number validation, lead persistence, and email notifications.',
+          'Maintained Celery image processing and Yandex Object Storage integration: fixed bugs, tuned workers, and added automated tests.'
+        ]
       },
       stack: 'Python · Django · GraphQL · Celery · PostgreSQL · Redis'
     },
