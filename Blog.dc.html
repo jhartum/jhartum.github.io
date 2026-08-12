@@ -322,14 +322,15 @@ class Component extends DCLogic {
       };
       let parts = [{ text, isText: true, isLink: false, isCode: false }];
       for (const ref of refs) {
+        const label = this.L(ref.label);
         const next = [];
         for (const p of parts) {
           if (!p.isText) { next.push(p); continue; }
-          const i = findWholeLabel(p.text, ref.label);
+          const i = findWholeLabel(p.text, label);
           if (i === -1) { next.push(p); continue; }
           if (i > 0) next.push({ text: p.text.slice(0, i), isText: true, isLink: false, isCode: false });
-          next.push({ text: ref.label, url: ref.url, isText: false, isLink: true, isCode: false });
-          if (i + ref.label.length < p.text.length) next.push({ text: p.text.slice(i + ref.label.length), isText: true, isLink: false, isCode: false });
+          next.push({ text: label, url: ref.url, isText: false, isLink: true, isCode: false });
+          if (i + label.length < p.text.length) next.push({ text: p.text.slice(i + label.length), isText: true, isLink: false, isCode: false });
         }
         parts = next;
       }
