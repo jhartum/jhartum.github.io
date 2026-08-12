@@ -236,16 +236,26 @@ class Component extends DCLogic {
     try { const l = localStorage.getItem('cv-lang'); if (l === 'ru' || l === 'en') lang = l; } catch(e){}
     const p = this.props || {};
     const crt = !!p.crt;
-    let openSlug = null;
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const postParam = params.get('post');
-      if (postParam) {
-        const found = this.POSTS.find(s => s.slug === postParam || s.slug.replace(/\.md$/, '') === postParam);
-        if (found) openSlug = found.slug;
-      }
-    } catch(e){}
+    const openSlug = this.postSlugFromLocation();
+    this._popstate = () => {
+      this.setState({ openSlug: this.postSlugFromLocation() }, () => {
+        this.scrollTop(false);
+        this.trackPageView();
+      });
+    };
+    window.addEventListener('popstate', this._popstate);
     this.setState({ lang, crt, openSlug });
+  }
+
+  componentWillUnmount(){ window.removeEventListener('popstate', this._popstate); }
+
+  postSlugFromLocation(){
+    try {
+      const postParam = new URLSearchParams(window.location.search).get('post');
+      if (!postParam) return null;
+      const found = this.POSTS.find(s => s.slug === postParam || s.slug.replace(/\.md$/, '') === postParam);
+      return found ? found.slug : null;
+    } catch(e){ return null; }
   }
 
   L(o){ return typeof o === 'string' ? o : (o[this.state.lang] ?? o.ru); }
@@ -264,8 +274,28 @@ class Component extends DCLogic {
   setRu = () => this.setLang('ru');
   setEn = () => this.setLang('en');
   toggleCrt = () => this.setState(s => ({ crt: !s.crt }));
-  openPost = (slug) => { this.setState({ openSlug: slug }, () => { const el = document.querySelector('[data-screen-label="blog"]'); if (el) el.scrollTo({ top: 0, behavior: 'smooth' }); }); };
-  closePost = () => this.setState({ openSlug: null });
+  scrollTop(smooth = true){ const el = document.querySelector('[data-screen-label="blog"]'); if (el) el.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' }); }
+  trackPageView(){
+    const gc = window.goatcounter;
+    if (gc && typeof gc.count === 'function') gc.count({ path: window.location.pathname + window.location.search });
+  }
+  pushRoute(slug){
+    const url = new URL(window.location.href);
+    const current = url.searchParams.get('post');
+    if ((current || null) === (slug || null)) return false;
+    if (slug) url.searchParams.set('post', slug);
+    else url.searchParams.delete('post');
+    window.history.pushState({ post: slug || null }, '', url);
+    return true;
+  }
+  openPost = (slug) => {
+    const navigated = this.pushRoute(slug);
+    this.setState({ openSlug: slug }, () => { this.scrollTop(); if (navigated) this.trackPageView(); });
+  };
+  closePost = () => {
+    const navigated = this.pushRoute(null);
+    this.setState({ openSlug: null }, () => { this.scrollTop(); if (navigated) this.trackPageView(); });
+  };
   onKey = (e) => { if (e.key === 'Enter') { const v = e.target.value; e.target.value = ''; this.runCmd(v); } };
   scrollEnd(){ const el = document.querySelector('[data-screen-label="blog"]'); if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }); }
 
@@ -284,7 +314,7 @@ class Component extends DCLogic {
     let out = [];
     if (!v) { out = []; }
     else if (cmd === 'help') out = [ ru ? 'команды: ls \u00b7 cat <post> \u00b7 random \u00b7 home \u00b7 cv \u00b7 clear' : 'commands: ls \u00b7 cat <post> \u00b7 random \u00b7 home \u00b7 cv \u00b7 clear' ];
-    else if (cmd === 'ls') { this.setState({ openSlug: null }); return; }
+    else if (cmd === 'ls') { this.closePost(); return; }
     else if (cmd === 'cat' || cmd === 'open') {
       const post = this.findPost(arg);
       if (post) { this.openPost(post.slug); return; }
