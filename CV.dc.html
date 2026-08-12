@@ -19,7 +19,7 @@
   .cv-static li{margin:4px 0;}
   .cv-static a{color:#166534;}
   .cv-static[hidden]{display:none!important;}
-  @media print{.cv-static{max-width:none;padding:0;font-size:11pt;}.cv-static h2{break-after:avoid;}.cv-static article{break-inside:avoid;}}
+  @media print{@page{size:A4;margin:0;}html,body{margin:0;padding:0;}.cv-static{max-width:none;padding:14mm 18mm;color:#000;font:10pt/1.38 Arial,Helvetica,sans-serif;-webkit-box-decoration-break:clone;box-decoration-break:clone;}.cv-static a{color:#000;text-decoration:none;}.cv-static h2{break-after:avoid;}.cv-static article{break-inside:auto;}}
 </style>
 </head>
 <body>
@@ -94,22 +94,116 @@
   @keyframes flick{0%{opacity:.94}7%{opacity:1}8%{opacity:.86}11%{opacity:1}70%{opacity:.97}100%{opacity:.95}}
   @keyframes sweep{0%{transform:translateY(-140px)}100%{transform:translateY(100vh)}}
   @keyframes pdot{0%{box-shadow:0 0 0 0 rgba(52,232,121,.5)}70%{box-shadow:0 0 0 7px rgba(52,232,121,0)}100%{box-shadow:0 0 0 0 rgba(52,232,121,0)}}
+  [data-print-cv]{display:none;}
   @media print{
-    @page{size:A4;margin:13mm;}
-    html,body{height:auto !important;overflow:visible !important;background:#fff !important;}
-    [data-chrome]{display:none !important;}
-    [data-screen-label="cv"]{position:static !important;inset:auto !important;height:auto !important;overflow:visible !important;background:#fff !important;color:#1a1a1a !important;text-shadow:none !important;}
-    [data-screen-label="cv"] *{text-shadow:none !important;color:#222 !important;}
-    [data-screen-label="cv"] a{color:#1a6b35 !important;}
-    [data-ink="title"]{color:#111 !important;}
-    [data-ink="accent"]{color:#1a6b35 !important;}
-    [data-ink="dim"]{color:#666 !important;}
-    [data-rail]{background:#c4c4c4 !important;}
-    [data-node]{color:#1a6b35 !important;}
-    [data-tag]{color:#1a6b35 !important;border-color:#1a6b35 !important;background:#fff !important;}
+    @page{size:A4;margin:0;}
+    html,body{margin:0 !important;padding:0 !important;height:auto !important;overflow:visible !important;background:#fff !important;}
+    #dc-root,#dc-root>.sc-host{height:auto !important;}
+    [data-screen-label="cv"],[data-chrome]{display:none !important;}
+    [data-print-cv]{
+      display:block !important;
+      max-width:none !important;
+      margin:0 !important;
+      padding:14mm 18mm !important;
+      color:#000 !important;
+      background:#fff !important;
+      font:10pt/1.38 Arial,Helvetica,sans-serif !important;
+      text-shadow:none !important;
+      -webkit-box-decoration-break:clone;
+      box-decoration-break:clone;
+    }
+    [data-print-cv] *{color:#000 !important;background:transparent !important;box-shadow:none !important;text-shadow:none !important;font-family:inherit !important;}
+    [data-print-cv] a{color:#000 !important;text-decoration:none !important;}
+    [data-print-cv] header{break-inside:avoid !important;}
+    [data-print-cv] section,[data-print-cv] article{break-inside:auto !important;}
+    [data-print-cv] h1{margin:0;font-size:20pt;line-height:1.1;}
+    [data-print-cv] h2{margin:5mm 0 2mm;padding-bottom:1mm;border-bottom:.5pt solid #000;font-size:11pt;line-height:1.2;break-after:avoid !important;}
+    [data-print-cv] h3{margin:3.5mm 0 0;font-size:10.5pt;line-height:1.25;break-after:avoid !important;}
+    [data-print-cv] p{margin:1.2mm 0;orphans:2;widows:2;}
+    [data-print-cv] .print-job-header{break-inside:avoid !important;}
+    [data-print-cv] ul{margin:1.5mm 0 0;padding-left:5mm;}
+    [data-print-cv] li{margin:0 0 1mm;break-inside:avoid;}
+    [data-print-cv] .print-role{margin-top:1.5mm;font-size:11pt;font-weight:700;}
+    [data-print-cv] .print-contact{margin-top:2mm;overflow-wrap:anywhere;}
+    [data-print-cv] .print-job-meta{margin-top:1mm;}
+    [data-print-cv] .print-job-context{font-style:italic;}
+    [data-print-cv] .print-stack{margin-top:1.5mm;break-before:avoid;}
   }
 </style>
 </helmet>
+
+<main data-print-cv aria-label="{{ print.ariaLabel }}">
+  <header>
+    <h1>{{ print.name }}</h1>
+    <p class="print-role">{{ print.role }}</p>
+    <p class="print-contact">{{ contact.city }} | <a href="tel:+79994524945">+7 (999) 452-49-45</a> | <a href="mailto:sasha.brezgunov@gmail.com">sasha.brezgunov@gmail.com</a></p>
+    <p class="print-contact"><a href="https://t.me/sk8destroy">t.me/sk8destroy</a> | <a href="https://github.com/jhartum">github.com/jhartum</a> | <a href="https://jhartum.github.io">jhartum.github.io</a></p>
+  </header>
+
+  <section>
+    <h2>{{ print.summaryHeading }}</h2>
+    <p>{{ about }}</p>
+  </section>
+
+  <section>
+    <h2>{{ print.skillsHeading }}</h2>
+    <sc-for list="{{ printSkills }}" as="s" hint-placeholder-count="9">
+      <p><strong>{{ s.k }}:</strong> {{ s.v }}</p>
+    </sc-for>
+    <p><strong>{{ print.spokenLanguagesLabel }}:</strong> {{ contact.languages }}</p>
+  </section>
+
+  <section>
+    <h2>{{ print.experienceHeading }}</h2>
+    <article>
+      <div class="print-job-header">
+        <h3>{{ nesh.title }} — {{ nesh.role }}</h3>
+        <p class="print-job-meta">{{ nesh.period }}</p>
+        <p class="print-job-context">{{ nesh.ctx }}</p>
+      </div>
+      <ul>
+        <sc-for list="{{ nesh.bullets }}" as="b" hint-placeholder-count="8">
+          <li>{{ b }}</li>
+        </sc-for>
+      </ul>
+      <p class="print-stack"><strong>{{ print.technologiesLabel }}:</strong> {{ nesh.stack }}</p>
+    </article>
+
+    <article>
+      <div class="print-job-header">
+        <h3>{{ fin.title }} — {{ fin.role }}</h3>
+        <p class="print-job-meta">{{ fin.period }}</p>
+        <p class="print-job-context">{{ fin.ctx }}</p>
+      </div>
+      <ul>
+        <sc-for list="{{ fin.bullets }}" as="b" hint-placeholder-count="4">
+          <li>{{ b }}</li>
+        </sc-for>
+      </ul>
+      <p class="print-stack"><strong>{{ print.technologiesLabel }}:</strong> {{ fin.stack }}</p>
+    </article>
+
+    <article>
+      <div class="print-job-header">
+        <h3>{{ tayga.title }} — {{ tayga.role }}</h3>
+        <p class="print-job-meta">{{ tayga.period }}</p>
+        <p class="print-job-context">{{ tayga.ctx }}</p>
+      </div>
+      <ul>
+        <sc-for list="{{ tayga.bullets }}" as="b" hint-placeholder-count="3">
+          <li>{{ b }}</li>
+        </sc-for>
+      </ul>
+      <p class="print-stack"><strong>{{ print.technologiesLabel }}:</strong> {{ tayga.stack }}</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>{{ print.educationHeading }}</h2>
+    <h3>{{ edu.institution }}</h3>
+    <p>{{ edu.degree }} | {{ edu.period }}</p>
+  </section>
+</main>
 
 <div data-screen-label="cv" style="position:fixed;inset:0;overflow-y:auto;overscroll-behavior:contain;background:radial-gradient(ellipse 120% 100% at 50% 32%, #0a1b10 0%, #06110a 56%, #040c07 100%);color:#34e879;font:14px/1.7 'IBM Plex Mono',ui-monospace,monospace;text-shadow:0 0 6px rgba(52,232,121,.30);">
   <div style="max-width:760px;margin:0 auto;padding:44px 24px 130px;">
@@ -292,6 +386,39 @@
 class Component extends DCLogic {
   state = { lang: 'en', crt: false, termLines: [] };
 
+  PRINT_COPY = {
+    ru: {
+      ariaLabel: 'Резюме Александра Брезгунова',
+      name: 'Александр Брезгунов',
+      summaryHeading: 'Профессиональный профиль',
+      skillsHeading: 'Ключевые навыки',
+      experienceHeading: 'Опыт работы',
+      educationHeading: 'Образование',
+      technologiesLabel: 'Технологии',
+      spokenLanguagesLabel: 'Языки общения',
+      skillLabels: {
+        languages: 'Языки программирования', backend: 'Backend', 'data/async': 'Данные и асинхронность',
+        quality: 'Качество', architecture: 'Архитектура', delivery: 'Delivery', frontend: 'Frontend',
+        additional: 'Дополнительно', 'AI workflow': 'AI-инструменты'
+      }
+    },
+    en: {
+      ariaLabel: 'Aleksandr Brezgunov resume',
+      name: 'Aleksandr Brezgunov',
+      summaryHeading: 'Professional Summary',
+      skillsHeading: 'Technical Skills',
+      experienceHeading: 'Work Experience',
+      educationHeading: 'Education',
+      technologiesLabel: 'Technologies',
+      spokenLanguagesLabel: 'Spoken Languages',
+      skillLabels: {
+        languages: 'Programming Languages', backend: 'Backend', 'data/async': 'Data and Messaging',
+        quality: 'Quality', architecture: 'Architecture', delivery: 'Delivery', frontend: 'Frontend',
+        additional: 'Additional', 'AI workflow': 'AI Tooling'
+      }
+    }
+  };
+
   DATA = {
     role:   { ru: 'Full-stack Developer · Python / React · 5+ лет', en: 'Full-stack Developer · Python / React · 5+ yrs' },
     status: { ru: 'доступен для работы', en: 'available for work' },
@@ -396,13 +523,20 @@ class Component extends DCLogic {
     const p = this.props || {};
     const crt = !!p.crt;
     document.getElementById('cv-static')?.setAttribute('hidden', '');
+    this.syncDocument(lang);
     this.setState({ lang, crt });
   }
 
   L(o){ return typeof o === 'string' ? o : (o[this.state.lang] ?? o.ru); }
   job(j){ return { title: this.L(j.title), role: this.L(j.role), ctx: this.L(j.ctx), period: this.L(j.period), bullets: this.L(j.bullets), stack: this.L(j.stack) }; }
+  syncDocument(l){
+    document.documentElement.lang = l;
+    document.title = l === 'ru'
+      ? 'Александр Брезгунов — Full-stack Developer'
+      : 'Aleksandr Brezgunov — Full-stack Developer';
+  }
 
-  setLang(l){ try { localStorage.setItem('cv-lang', l); } catch(e){} this.setState({ lang: l }); }
+  setLang(l){ try { localStorage.setItem('cv-lang', l); } catch(e){} this.syncDocument(l); this.setState({ lang: l }); }
   setRu = () => this.setLang('ru');
   setEn = () => this.setLang('en');
   toggleCrt = () => this.setState(s => ({ crt: !s.crt }));
@@ -433,6 +567,8 @@ class Component extends DCLogic {
 
   renderVals(){
     const d = this.DATA;
+    const print = this.PRINT_COPY[this.state.lang] || this.PRINT_COPY.ru;
+    const printSkills = d.skills.map(s => ({ k: print.skillLabels[s.k] || s.k, v: s.v }));
     return {
       isRu: this.state.lang === 'ru',
       isEn: this.state.lang === 'en',
@@ -445,6 +581,8 @@ class Component extends DCLogic {
       edu: { institution: this.L(d.edu.institution), degree: this.L(d.edu.degree), period: d.edu.period },
       skills: d.skills,
       contact: { city: this.L(d.contact.city), languages: this.L(d.contact.languages) },
+      print: { ...print, role: this.L(d.role) },
+      printSkills,
       termLines: this.state.termLines,
       setRu: this.setRu, setEn: this.setEn,
       toggleCrt: this.toggleCrt, doPrint: this.doPrint, goBlog: this.goBlog, onKey: this.onKey
