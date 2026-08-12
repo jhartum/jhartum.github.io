@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./posts/shared-ai-harness-for-a-development-team-with-pi.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -68,7 +69,50 @@
       </div>
       <div style="height:1px;background:#0f3d22;margin:22px 0;"></div>
 
-            <sc-for list="{{ post.bodyParagraphs }}" as="para" hint-placeholder-count="6"><p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;"><sc-for list="{{ para }}" as="ep" hint-placeholder-count="7"><sc-if value="{{ ep.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ ep.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ ep.text }}</a></sc-if><sc-if value="{{ ep.isText }}" hint-placeholder-val="{{ true }}"><span>{{ ep.text }}</span></sc-if></sc-for></p></sc-for>
+      <sc-for list="{{ post.bodyParagraphs }}" as="para" hint-placeholder-count="6">
+        <p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;">
+          <sc-for list="{{ para }}" as="ep" hint-placeholder-count="7">
+            <sc-if value="{{ ep.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ ep.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ ep.text }}</a></sc-if>
+            <sc-if value="{{ ep.isCode }}" hint-placeholder-val="{{ false }}"><code style="padding:1px 4px;background:#0b2112;color:#9cffbd;border:1px solid #143c23;border-radius:3px;font-size:.92em;text-shadow:none;">{{ ep.text }}</code></sc-if>
+            <sc-if value="{{ ep.isText }}" hint-placeholder-val="{{ true }}"><span>{{ ep.text }}</span></sc-if>
+          </sc-for>
+        </p>
+      </sc-for>
+
+      <sc-for list="{{ post.bodyBlocks }}" as="block" hint-placeholder-count="31">
+        <sc-if value="{{ block.isLead }}" hint-placeholder-val="{{ false }}">
+          <blockquote style="margin:0 0 30px;padding:12px 16px;border-left:3px solid #2a7a45;background:#08160d;color:#a9e6bf;font-size:15px;line-height:1.7;max-width:68ch;">
+            <sc-for list="{{ block.parts }}" as="bp" hint-placeholder-count="4"><sc-if value="{{ bp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ bp.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ bp.text }}</a></sc-if><sc-if value="{{ bp.isCode }}" hint-placeholder-val="{{ false }}"><code style="padding:1px 4px;background:#0b2112;color:#9cffbd;border:1px solid #143c23;border-radius:3px;font-size:.92em;text-shadow:none;">{{ bp.text }}</code></sc-if><sc-if value="{{ bp.isText }}" hint-placeholder-val="{{ true }}"><span>{{ bp.text }}</span></sc-if></sc-for>
+          </blockquote>
+        </sc-if>
+
+        <sc-if value="{{ block.isHeading }}" hint-placeholder-val="{{ false }}">
+          <h2 data-ink="section" style="margin:36px 0 14px;font-size:18px;line-height:1.35;font-weight:600;color:#d6ffe4;text-shadow:0 0 10px rgba(52,232,121,.35);"><span style="color:#34e879;">##</span> <sc-for list="{{ block.parts }}" as="bp" hint-placeholder-count="4"><sc-if value="{{ bp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ bp.url }}" target="_blank" rel="noopener" style="color:#d6ffe4;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ bp.text }}</a></sc-if><sc-if value="{{ bp.isCode }}" hint-placeholder-val="{{ false }}"><code style="padding:1px 4px;background:#0b2112;color:#9cffbd;border:1px solid #143c23;border-radius:3px;font-size:.92em;text-shadow:none;">{{ bp.text }}</code></sc-if><sc-if value="{{ bp.isText }}" hint-placeholder-val="{{ true }}"><span>{{ bp.text }}</span></sc-if></sc-for></h2>
+        </sc-if>
+
+        <sc-if value="{{ block.isParagraph }}" hint-placeholder-val="{{ true }}">
+          <p style="margin:0 0 18px;color:#cdeedb;font-size:15px;line-height:1.7;max-width:68ch;"><sc-for list="{{ block.parts }}" as="bp" hint-placeholder-count="7"><sc-if value="{{ bp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ bp.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;" style-hover="border-bottom-color:#7dffae;">{{ bp.text }}</a></sc-if><sc-if value="{{ bp.isCode }}" hint-placeholder-val="{{ false }}"><code style="padding:1px 4px;background:#0b2112;color:#9cffbd;border:1px solid #143c23;border-radius:3px;font-size:.92em;text-shadow:none;">{{ bp.text }}</code></sc-if><sc-if value="{{ bp.isText }}" hint-placeholder-val="{{ true }}"><span>{{ bp.text }}</span></sc-if></sc-for></p>
+        </sc-if>
+
+        <sc-if value="{{ block.isCode }}" hint-placeholder-val="{{ false }}">
+          <pre style="margin:8px 0 24px;padding:16px 18px;overflow-x:auto;border:1px solid #103a22;background:#030a05;color:#9cffbd;font:12.5px/1.65 'IBM Plex Mono',monospace;text-shadow:none;white-space:pre;"><code>{{ block.text }}</code></pre>
+        </sc-if>
+
+        <sc-if value="{{ block.isTable }}" hint-placeholder-val="{{ false }}">
+          <div role="table" style="margin:8px 0 26px;overflow-x:auto;border:1px solid #103a22;text-shadow:none;">
+            <div style="min-width:760px;">
+              <div role="row" style="display:flex;background:#0b2112;color:#d6ffe4;font-size:12.5px;font-weight:600;">
+                <sc-for list="{{ block.headers }}" as="cell" hint-placeholder-count="3"><div role="columnheader" style="flex:1;padding:10px 12px;border-right:1px solid #103a22;"><sc-for list="{{ cell.parts }}" as="cp" hint-placeholder-count="3"><sc-if value="{{ cp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ cp.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;">{{ cp.text }}</a></sc-if><sc-if value="{{ cp.isCode }}" hint-placeholder-val="{{ false }}"><code style="color:#9cffbd;">{{ cp.text }}</code></sc-if><sc-if value="{{ cp.isText }}" hint-placeholder-val="{{ true }}"><span>{{ cp.text }}</span></sc-if></sc-for></div></sc-for>
+              </div>
+              <sc-for list="{{ block.rows }}" as="row" hint-placeholder-count="8">
+                <div role="row" style="display:flex;border-top:1px solid #103a22;color:#a9e6bf;font-size:12.5px;line-height:1.55;">
+                  <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3"><div role="cell" style="flex:1;padding:9px 12px;border-right:1px solid #103a22;"><sc-for list="{{ cell.parts }}" as="cp" hint-placeholder-count="4"><sc-if value="{{ cp.isLink }}" hint-placeholder-val="{{ false }}"><a href="{{ cp.url }}" target="_blank" rel="noopener" style="color:#7dffae;text-decoration:none;border-bottom:1px solid #2a5a3a;">{{ cp.text }}</a></sc-if><sc-if value="{{ cp.isCode }}" hint-placeholder-val="{{ false }}"><code style="padding:1px 4px;background:#0b2112;color:#9cffbd;border:1px solid #143c23;border-radius:3px;">{{ cp.text }}</code></sc-if><sc-if value="{{ cp.isText }}" hint-placeholder-val="{{ true }}"><span>{{ cp.text }}</span></sc-if></sc-for></div></sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </sc-for>
 
           <sc-if value="{{ post.hasLinks }}"><div data-ink="setup" style="margin:4px 0 14px;font-size:16px;font-weight:600;color:#d6ffe4;text-shadow:0 0 10px rgba(52,232,121,.4);">## {{ setupLabel }}</div>
 
@@ -118,6 +162,7 @@ class Component extends DCLogic {
   state = { lang: 'en', crt: false, openSlug: null, termLines: [] };
 
   POSTS = [
+    ...(window.BLOG_POSTS || []),
     { date: '2026-07-23', slug: 'shared-ai-assistant-for-the-team-in-telegram.md', read: { ru: '2 мин', en: '2 min' }, tags: ['pi-chat', 'telegram', 'gondolin', 'devops'],
       title: { ru: 'Общий AI-ассистент команды в Telegram', en: 'A shared AI assistant for the team in Telegram' },
       excerpt: { ru: 'Обсуждаем в рабочем чате: «Почему сервис снова отдаёт 500?»\n\nПишем:\n\n@assistant посмотри, что случилось\n\nБот идёт в Grafana/Loki, смотрит логи и метрики, проверяет состояние сервиса через Portainer и объясняет причину прямо в треде.\n\nЕсли проблема требует работы — создаёт задачу в YouTrack с уже собранным контекстом.\n\nТак же и с новыми фичами. Команда обсуждает идею в Telegram, принимает решения, а потом просит ассистента собрать итоги и создать задачу в таск-трекере с описанием, требованиями и контекстом обсуждения.\n\nЕщё один сценарий — специфичные запросы по данным всех школ. У ассистента есть psql с read-only доступом: можно прямо в чате попросить проверить данные или собрать нужную выборку по всей сети.\n\nПри этом мы не используем его для генерации кода. Он не пишет фичи, коммиты и merge requests. Его задача — снимать инженерную рутину: смотреть логи, проверять состояние сервисов, делать запросы в БД, собирать контекст по инцидентам и создавать задачи в YouTrack.\n\nВнутри это Pi Chat и изолированная Gondolin VM с обычными CLI:\n\ngcx, glab, yt, psql, portainerctl.\n\nНикаких отдельных MCP-серверов для каждой интеграции. Мы собираем Linux-образ через bash и кладём внутрь инструменты, которыми уже пользуется команда.\n\nСекреты не попадают в VM. HTTP-доступ ограничен разрешёнными хостами, а PostgreSQL спрятан за PgBouncer и доступен только через read-only пользователя.\n\nВ качестве модели используем MiMo-V2.5 через OpenCode Go. Для ограниченных задач с понятными CLI-инструментами её хватает, а бизнесу такая автоматизация ничего не стоит.\n\nСам бот, sandbox и CLI-образ собираются и деплоятся через GitLab CI/CD.\n\nВ итоге Telegram стал общим рабочим пространством команды: здесь обсуждаем инциденты и новые фичи, здесь подключаем ассистента, а результаты проверки и созданные задачи остаются в том же контексте.\n\nНе отдельный AI-чат, куда нужно вручную переносить детали обсуждения. Ассистент уже находится там, где возникает задача.', en: 'We are discussing something in the team chat: “Why is the service returning 500s again?”\n\nWe type:\n\n@assistant take a look\n\nThe bot goes to Grafana/Loki, checks logs and metrics, checks the service in Portainer, and explains the cause right in the thread.\n\nIf the problem needs follow-up, it creates a YouTrack issue with the context already attached.\n\nThe same works for new features. The team discusses an idea in Telegram, makes decisions, then asks the assistant to summarize the outcome and create a task with the description, requirements, and discussion context.\n\nAnother use case is ad hoc queries across all schools. The assistant has psql with read-only access, so we can ask it to check data or build a specific report across the whole network right from the chat.\n\nWe do not use it to generate code. It does not write features, commits, or merge requests. Its job is to remove engineering routine: inspect logs, check service status, query the database, collect incident context, and create YouTrack issues.\n\nUnder the hood, it is Pi Chat and an isolated Gondolin VM with ordinary CLIs:\n\ngcx, glab, yt, psql, portainerctl.\n\nNo dedicated MCP server for every integration. We build a Linux image with bash and put the same tools the team already uses inside.\n\nSecrets never enter the VM. HTTP access is limited to allowlisted hosts, while PostgreSQL is hidden behind PgBouncer and exposed only through a read-only user.\n\nWe use MiMo-V2.5 through OpenCode Go. It is enough for narrow tasks with well-defined CLI tools, and the automation costs the business nothing.\n\nThe bot, sandbox, and CLI image are built and deployed by GitLab CI/CD.\n\nTelegram has become a shared workspace for the team: this is where we discuss incidents and new features, bring in the assistant, and keep investigation results and created tasks in the same context.\n\nNot a separate AI chat where discussion details have to be copied manually. The assistant is already where the task appears.' },
@@ -263,25 +308,62 @@ class Component extends DCLogic {
     const cur = this.POSTS.find(p => p.slug === this.state.openSlug);
     const mapLink = (l) => { const d = l.desc ? this.L(l.desc) : ''; return { label: l.label, url: l.url, descStr: d ? ' — ' + d : '', descParts: this.descParts(l.descParts, d ? ' — ' + d : ''), children: (l.children || []).map(mapLink) }; };
     const buildExcerptParts = (text, refs) => {
-      let parts = [{ text, isText: true, isLink: false }];
+      const findWholeLabel = (value, label) => {
+        let from = 0;
+        while (from < value.length) {
+          const i = value.indexOf(label, from);
+          if (i === -1) return -1;
+          const before = i > 0 ? value[i - 1] : '';
+          const after = i + label.length < value.length ? value[i + label.length] : '';
+          if ((!before || !/[A-Za-z0-9]/.test(before)) && (!after || !/[A-Za-z0-9]/.test(after))) return i;
+          from = i + label.length;
+        }
+        return -1;
+      };
+      let parts = [{ text, isText: true, isLink: false, isCode: false }];
       for (const ref of refs) {
         const next = [];
         for (const p of parts) {
           if (!p.isText) { next.push(p); continue; }
-          const i = p.text.indexOf(ref.label);
+          const i = findWholeLabel(p.text, ref.label);
           if (i === -1) { next.push(p); continue; }
-          if (i > 0) next.push({ text: p.text.slice(0, i), isText: true, isLink: false });
-          next.push({ text: ref.label, url: ref.url, isText: false, isLink: true });
-          if (i + ref.label.length < p.text.length) next.push({ text: p.text.slice(i + ref.label.length), isText: true, isLink: false });
+          if (i > 0) next.push({ text: p.text.slice(0, i), isText: true, isLink: false, isCode: false });
+          next.push({ text: ref.label, url: ref.url, isText: false, isLink: true, isCode: false });
+          if (i + ref.label.length < p.text.length) next.push({ text: p.text.slice(i + ref.label.length), isText: true, isLink: false, isCode: false });
         }
         parts = next;
       }
-      return parts;
+      const withCode = [];
+      for (const p of parts) {
+        if (!p.isText) { withCode.push(p); continue; }
+        for (const chunk of p.text.split(/(`[^`]+`)/g).filter(Boolean)) {
+          const isCode = chunk.startsWith('`') && chunk.endsWith('`');
+          withCode.push({ text: isCode ? chunk.slice(1, -1) : chunk, isText: !isCode, isLink: false, isCode });
+        }
+      }
+      return withCode;
     };
+    const mapCell = (value) => ({ parts: buildExcerptParts(this.L(value), cur.refs || []) });
+    const bodyBlocks = cur ? (cur.blocks || []).map(block => {
+      const type = block.type || 'paragraph';
+      const text = block.text ? this.L(block.text) : '';
+      return {
+        text,
+        parts: text ? buildExcerptParts(text, cur.refs || []) : [],
+        headers: (block.headers || []).map(mapCell),
+        rows: (block.rows || []).map(row => ({ cells: row.map(mapCell) })),
+        isLead: type === 'lead',
+        isHeading: type === 'heading',
+        isParagraph: type === 'paragraph',
+        isCode: type === 'code',
+        isTable: type === 'table'
+      };
+    }) : [];
     const post = cur ? {
       slug: cur.slug, title: this.L(cur.title), date: cur.date, read: this.L(cur.read),
       tagsStr: this.tagsStr(cur),
-      bodyParagraphs: this.L(cur.excerpt).split('\n\n').filter(p => p.trim()).map(p => buildExcerptParts(p.trim(), cur.refs || [])),
+      bodyParagraphs: cur.excerpt ? this.L(cur.excerpt).split('\n\n').filter(p => p.trim()).map(p => buildExcerptParts(p.trim(), cur.refs || [])) : [],
+      bodyBlocks,
       links: (cur.links || []).map(mapLink),
       hasLinks: (cur.links || []).length > 0
     } : null;
